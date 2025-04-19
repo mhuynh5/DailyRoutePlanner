@@ -1,8 +1,7 @@
 body {
-<<<<<<< HEAD
-<<<<<<< HEAD
     font-family: 'Lucida Sans';
-    margin: 0;
+    background-color: #85eaa3;
+    margin: 10px;
     padding: 0;
   }
   form {
@@ -17,18 +16,18 @@ body {
   button {
     padding: 8px 16px;
   }
+
+  table {
+    margin-right: auto;
+    margin-left: auto;
+    width: 70%;
+  }
+  th, tr{
+    border: 1px solid #85eaa3;
+    background-color:#75db9e;
+  }
   #map {
     height: 80vh;
     width: 100%;
   }
   
-=======
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    font-size: 12pt;
-}
->>>>>>> 8ef454d (more button)
-=======
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    font-size: 12pt;
-}
->>>>>>> b97ae7d3d771b3f6ed9e9659b7682371ba316222

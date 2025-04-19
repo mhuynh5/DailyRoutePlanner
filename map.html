@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <link rel="stylesheet" href="map.css">
     <title>Daily Route Planner</title>
     <style>
       #map {
@@ -25,6 +26,38 @@
       <ul id="stop-list"></ul>
     </div>
     <div id="map"></div>
+
+    <!--make schedule-->
+    <h1>Make Schedule</h1>
+    
+    <table id="schedule">
+      <tr>
+        <tr>
+          <th style="width:20%">Event Number</th>
+          <th>Event</th>
+          <th>Time</th>
+        </tr>
+      </tr>
+    </table>
+    <a href="schedule.html" id="button">Create Event
+    </a>
+
+    <!--make map-->
+    <h1>My Google Map</h1>
+    <div id="map"></div>
+    <script>
+      function initMap() {
+        const location = { lat: 37.7749, lng: -122.4194 }; // Example: San Francisco
+        const map = new google.maps.Map(document.getElementById("map"), {
+          zoom: 12,
+          center: location,
+        });
+        const marker = new google.maps.Marker({
+          position: location,
+          map: map,
+        });
+      }
+    </script>
 
     <!-- Your JS -->
     <script src="map.js"></script>

@@ -1,39 +1,37 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Simple Google Map</title>
+    <title>Daily Route Planner</title>
     <style>
       #map {
-        height: 100vh;
+        height: 80vh;
         width: 100%;
+      }
+      #controls {
+        padding: 10px;
+      }
+      #stop-list {
+        list-style: none;
+        padding-left: 0;
       }
     </style>
   </head>
   <body>
-    <h1>My Google Map</h1>
+    <h1>Daily Route Planner</h1>
+    <div id="controls">
+      <input type="text" id="address-input" placeholder="Enter a location" />
+      <button onclick="addStop()">Add Stop</button>
+      <button onclick="calculateRoute()">Map Route</button>
+      <ul id="stop-list"></ul>
+    </div>
     <div id="map"></div>
 
-    <script>
-      function initMap() {
-<<<<<<< HEAD
-        const location = { lat: 37.7749, lng: -122.4194 }; // Example: San Francisco, CA
-=======
-        const location = { lat: 37.7749, lng: -122.4194 }; // Example: San Francisco
->>>>>>> main
-        const map = new google.maps.Map(document.getElementById("map"), {
-          zoom: 12,
-          center: location,
-        });
-        const marker = new google.maps.Marker({
-          position: location,
-          map: map,
-        });
-      }
-    </script>
+    <!-- Your JS -->
+    <script src="map.js"></script>
 
+    <!-- FIXED: Google Maps API (must be all on one line!) -->
     <script async defer
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAHvSzgFSkDHhvB-hjOOUaRME1rBZTIPkk
-      &callback=initMap">
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAHvSzgFSkDHhvB-hjOOUaRME1rBZTIPkk&callback=initMap">
     </script>
   </body>
 </html>

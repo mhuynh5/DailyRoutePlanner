@@ -34,6 +34,13 @@
     width: 100%;
   }
 
+  form {
+    background-color: #85eaa3;
+  }
+  input[type="radio"] {
+    width: 1%;
+  }
+
   input {
     width: 80%;
   }

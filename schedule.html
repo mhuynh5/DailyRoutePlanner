@@ -31,16 +31,31 @@
         
         <!--Use if we implement AI-->
         <label>Would you like AI to add this to your schedule for you?</label>
-        <form id="choose_ai">
-            <input type="radio">
-            <label>AI Generate Schedule</label>
-            <input type="radio">
-            <label>Input Your Own Time</label>
-        </form>
+        <br>
+            <input type="radio" name="ai_choice" value="AI" onclick="make_UI_invisible()"/>
+            <label class="ai_option">AI Generate Schedule</label>
+            <br>
+            <input type="radio" name="ai_choice" value="DIY" onclick="make_UI_visible()"/>
+            <label class="ai_option">Input Your Own Time</label>
         <br><br>
+        <script>
+            function make_UI_visible() {
+                const question = document.getElementById("time_request");
+                const input = document.getElementById("time_of_arrival");
+                question.style.visibility = "visible";
+                input.style.visibility = "visible";
+            }
 
-        <label>What time do you want to get there?</label>
-        <input type="text" placeholder="Enter time of arrival" id="time_of_arrival">
+            function make_UI_invisible() {
+                const question = document.getElementById("time_request");
+                const input = document.getElementById("time_of_arrival");
+                question.style.visibility = "hidden";
+                input.style.visibility = "hidden";
+            }
+        </script>
+
+        <label style="visibility: hidden;" id="time_request">What time do you want to get there?</label>
+        <input type="text" placeholder="Enter time of arrival" id="time_of_arrival" style="visibility: hidden;">
         <br><br>
 
         <button id="generate_schedule">Generate Schedule</button>

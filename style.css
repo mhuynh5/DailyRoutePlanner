@@ -1,22 +1,3 @@
-  body {
-    font-family: 'Lucida Sans';
-    background-color: #85eaa3;
-    margin: 10px;
-    padding: 0;
-  }
-  form {
-    padding: 10px;
-    background: #f0f0f0;
-  }
-  input {
-    margin: 5px 0;
-    padding: 5px;
-    width: 300px;
-  }
-  button {
-    padding: 8px 16px;
-    font-family: 'Lucida Sans';
-  }
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(to right, #e0f7f1, #c5e3dc);
@@ -28,26 +9,27 @@ body {
 h1, h2 {
   text-align: center;
   color: #1f5c4d;
+  margin-bottom: 15px;
 }
 
 #controls, form {
-  background: #ffffffdd;
-  padding: 20px;
-  margin: 20px auto;
+  background: #ffffffee;
+  padding: 24px;
+  margin: 30px auto;
   width: 90%;
-  max-width: 800px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  max-width: 850px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 input, select, button, textarea {
-  font-size: 1em;
-  padding: 10px;
-  margin: 8px 0;
+  font-size: 1rem;
+  font-family: 'Segoe UI', sans-serif;
+  padding: 12px;
+  margin: 10px 0;
   border: 1px solid #ccc;
-  border-radius: 8px;
+  border-radius: 10px;
   width: 100%;
-  max-width: 100%;
   box-sizing: border-box;
 }
 
@@ -58,7 +40,7 @@ input[type="radio"] {
 button {
   background-color: #28a745;
   color: white;
-  font-weight: bold;
+  font-weight: 600;
   cursor: pointer;
   border: none;
   transition: background-color 0.2s ease;
@@ -68,64 +50,87 @@ button:hover {
   background-color: #218838;
 }
 
+table {
+  width: 95%;
+  margin: 30px auto;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+th, td {
+  padding: 12px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+th {
+  background-color: #75db9e;
+  color: #333;
+  font-weight: bold;
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+#num, #num_label { width: 5%; }
+#event, #event_label { width: 15%; }
+#time, #time_label,
+#priority, #priority_label,
+#eta, #eta_label,
+#gap, #gap_label,
+#actions, #actions_label { width: 8%; }
+#location, #location_label,
+#notes, #notes_label,
+#visual, #visual_label { width: 12%; }
+
 #map {
   height: 70vh;
   width: 100%;
-  border-radius: 10px;
-  margin-top: 10px;
+  border-radius: 12px;
+  margin-top: 20px;
 }
 
-  table {
-    margin-right: auto;
-    margin-left: auto;
-    width:100%;
-  }
-  th, tr{
-    border: 1px solid black;
-    width: 1%;
-    text-align: center;
-  }
-  th {
-    background-color:#75db9e;
-  }
-  #num, #num_label {
-    width: 1%;
-  }
-  #event, #event_label {
-    width: 10%;
-  }
-  #time, #time_label {
-    width: 3%;
-  }
-  #location, #location_label {
-    width: 10%;
-  }
-  #category, #category_label {
-    width: 1%;
-  }
-  #notes, #notes_label {
-    width: 7%;
-  }
-  #priority, #priority_label {
-    width: 3%;
-  }
-  #visual, #visual_label {
-    width: 5%;
-  }
-  #eta, #eta_label {
-    width: 5%;
-  }
-  #gap, #gap_label {
-    width: 5%;
-  }
-  #actions, #actions_label {
-    width: 3%;
-  }
+#directions-panel {
+  max-height: 300px;
+  overflow-y: auto;
+  background: #fff;
+  padding: 20px;
+  margin: 30px auto;
+  width: 95%;
+  max-width: 1000px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  font-size: 0.95em;
+  color: #333;
+}
 
-  textarea {
-    width: 90%;
-    font-family: 'Lucida Sans';
-  }
-  select {
-    font-family: 'Lucida Sans';
-  }
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.button-group button {
+  flex: 1;
+  min-width: 120px;
+}
+
+.section {
+  background-color: #ffffff;
+  margin: 40px auto;
+  padding: 30px;
+  border-radius: 20px;
+  max-width: 1000px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 60px;
+}

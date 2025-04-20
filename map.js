@@ -479,6 +479,20 @@ function autoFixConflicts() {
   }, 1000); 
 }
 
+function handleFixConflicts() {
+  const travelTable = document.getElementById("travel-time-table");
+  const conflictRows = Array.from(travelTable.querySelectorAll("tr:not(:first-child):not(:last-child)"))
+    .filter(row => row.innerHTML.includes("⚠️ Late") || row.innerHTML.includes("Not enough travel time"));
+
+  if (conflictRows.length === 0) {
+    alert("✅ No conflicts to fix!");
+    return;
+  }
+
+  autoFixConflicts();
+}
+
+
 function handleAddEvent() {
   const name = document.getElementById("event-name").value.trim();
   const time = document.getElementById("event-time").value.trim();

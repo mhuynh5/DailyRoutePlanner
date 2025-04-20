@@ -1,3 +1,22 @@
+  body {
+    font-family: 'Lucida Sans';
+    background-color: #85eaa3;
+    margin: 10px;
+    padding: 0;
+  }
+  form {
+    padding: 10px;
+    background: #f0f0f0;
+  }
+  input {
+    margin: 5px 0;
+    padding: 5px;
+    width: 300px;
+  }
+  button {
+    padding: 8px 16px;
+    font-family: 'Lucida Sans';
+  }
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(to right, #e0f7f1, #c5e3dc);
@@ -56,94 +75,57 @@ button:hover {
   margin-top: 10px;
 }
 
-table {
-  border-collapse: collapse;
-  width: 95%;
-  margin: 20px auto;
-  background-color: #ffffff;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-}
+  table {
+    margin-right: auto;
+    margin-left: auto;
+    width:100%;
+  }
+  th, tr{
+    border: 1px solid black;
+    width: 1%;
+    text-align: center;
+  }
+  th {
+    background-color:#75db9e;
+  }
+  #num, #num_label {
+    width: 1%;
+  }
+  #event, #event_label {
+    width: 10%;
+  }
+  #time, #time_label {
+    width: 3%;
+  }
+  #location, #location_label {
+    width: 10%;
+  }
+  #category, #category_label {
+    width: 1%;
+  }
+  #notes, #notes_label {
+    width: 7%;
+  }
+  #priority, #priority_label {
+    width: 3%;
+  }
+  #visual, #visual_label {
+    width: 5%;
+  }
+  #eta, #eta_label {
+    width: 5%;
+  }
+  #gap, #gap_label {
+    width: 5%;
+  }
+  #actions, #actions_label {
+    width: 3%;
+  }
 
-th, td {
-  border: 1px solid #ddd;
-  padding: 12px;
-  text-align: center;
-}
-
-th {
-  background-color: #28a745;
-  color: white;
-}
-
-tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-
-textarea {
-  resize: vertical;
-  min-height: 50px;
-}
-
-#schedule_button {
-  display: block;
-  margin: 30px auto;
-  padding: 12px 24px;
-  background-color: #007bff;
-}
-
-#schedule_button:hover {
-  background-color: #0056b3;
-}
-
-#calculatebutton {
-  display: block;
-  margin: 10px auto;
-}
-
-.section {
-  background-color: #ffffff;
-  margin: 30px auto;
-  padding: 25px;
-  border-radius: 16px;
-  max-width: 1000px;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.1);
-}
-
-h2 {
-  margin-top: 0;
-  font-size: 1.4em;
-  color: #1f5c4d;
-  border-bottom: 1px solid #ccc;
-  padding-bottom: 5px;
-}
-
-.button-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.button-group button {
-  flex: 1;
-  min-width: 120px;
-}
-
-select {
-  margin-top: 10px;
-}
-
-#directions-panel {
-  max-height: 300px;
-  overflow-y: auto;
-  background: #fff;
-  padding: 15px;
-  margin: 20px auto;
-  width: 95%;
-  max-width: 1000px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  font-size: 0.95em;
-  color: #333;
-}
-
+  textarea {
+    width: 90%;
+    font-family: 'Lucida Sans';
+  }
+  select {
+    font-family: 'Lucida Sans';
+  }

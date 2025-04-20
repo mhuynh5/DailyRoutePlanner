@@ -89,51 +89,26 @@ function updateScheduleTable() {
                           e.priority === "medium" ? "#ffc107" : "#5cb85c";
 
     row.innerHTML = `
-      <td>${idx + 1}</td>
-
-      <td contenteditable 
-          oninput="updateScheduleTable()" 
-          onblur="schedule[${idx}].name = this.textContent.trim(); updateScheduleTable();">
-        ${e.name}
-      </td>
-
-      <td contenteditable 
-          oninput="updateScheduleTable()" 
-          onblur="schedule[${idx}].time = this.textContent.trim(); updateScheduleTable();">
-        ${e.time}
-      </td>
-
-      <td>${endTime}</td>
-
-      <td contenteditable 
-          oninput="updateScheduleTable()" 
-          onblur="schedule[${idx}].location = this.textContent.trim(); updateScheduleTable();">
-        ${e.location}
-      </td>
-
-      <td><textarea placeholder="Notes" 
-                    oninput="updateScheduleTable()" 
-                    onblur="schedule[${idx}].note = this.value; updateScheduleTable();">${e.note || ''}</textarea></td>
-
-      <td>
-        <select onchange="schedule[${idx}].priority = this.value; updateScheduleTable();" 
-                style="background:${priorityColor}">
+      <td id="num">${idx + 1}</td>
+      <td contenteditable="true" oninput="schedule[${idx}].name = this.textContent" id="event">${e.name}</td>
+      <td contenteditable="true" oninput="schedule[${idx}].time = this.textContent" id="time">${e.time} - ${endTime} </td>
+      <td contenteditable="true" oninput="schedule[${idx}].location = this.textContent" id="location">${e.location}</td>
+      <td id="category"><input value="${e.category || ''}" onchange="schedule[${idx}].category = this.value"></td>
+      <td id="notes"><textarea placeholder="Notes" onchange="schedule[${idx}].note = this.value">${e.note || ''}</textarea></td>
+      <td id="priority">
+        <select onchange="schedule[${idx}].priority = this.value" style="background:${priorityColor}">
           <option value="low" ${e.priority === "low" ? "selected" : ""}>Low</option>
           <option value="medium" ${e.priority === "medium" ? "selected" : ""}>Medium</option>
           <option value="high" ${e.priority === "high" ? "selected" : ""}>High</option>
         </select>
       </td>
-
-      <td><div style="width:${e.duration}px; height:10px; background:#007bff; border-radius:5px"></div></td>
-
-      <td id="gap-${idx}" style="color: gray;"></td>
-
-    <td>
-      <button onclick="schedule.splice(${idx},1); updateScheduleTable()">🗑</button>
-      <button onclick="schedule.splice(${idx}+1,0,{...schedule[${idx}]}); updateScheduleTable()">📄</button>
-      <button onclick="exportToGoogleCalendar(${idx})">📅</button>
-    </td>
-
+      <td id="visual"><div style="width:${e.duration}px; height:10px; background:#007bff"></div></td>
+      <td id="eta"><span id="eta-${idx}">—</span></td>
+      <td id="gap"><span id="gap-${idx}" style="color: gray"></span></td>
+      <td id="actions">
+        <button onclick="schedule.splice(${idx},1); updateScheduleTable()">🗑</button>
+        <button onclick="schedule.splice(${idx}+1,0,{...schedule[${idx}]}); updateScheduleTable()">📄</button>
+      </td>
     `;
   });
   sessionStorage.setItem("schedule_data", JSON.stringify(schedule));

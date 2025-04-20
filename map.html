@@ -11,10 +11,6 @@
       #controls {
         padding: 10px;
       }
-      table, th, td {
-        border: 1px solid #ccc;
-        padding: 5px;
-      }
       textarea {
         width: 100%;
         resize: vertical;
@@ -51,59 +47,38 @@
         <option value="TRANSIT">Transit</option>
       </select>
     </div>
-  
-    <div class="section">
-      <h2>Schedule Overview</h2>
-      <table id="schedule">
-        <tr>
-          <th>Event #</th>
-          <th>Event</th>
-          <th>Start</th>
-          <th>End</th>
-          <th>Location</th>
-          <th>Notes</th>
-          <th>Priority</th>
-          <th>Visual</th>
-          <th>Gap</th>
-          <th>Actions</th>
-        </tr>
-      </table>
-    
-      <button id="schedule_button" onclick="location.href='schedule.html'">Open Schedule Builder</button>
-    </div>
-  
-    <div class="section">
-      <h2>Travel Time Summary</h2>
-      <table id="travel-time-table">
-        <tr>
-          <th>From</th>
-          <th>To</th>
-          <th>Duration</th>
-          <th>Arrive By</th>
-        </tr>
-      </table>
-  
-      <div class="button-group">
-        <button onclick="calculateRoute()">Map Route</button>
-        <button onclick="autoFixConflicts()">Fix Conflicts</button>
-        <button onclick="window.print()">Print Day Plan</button>
-      </div>
-    </div>
-  
-    <div class="section">
-      <h2>Route Map</h2>
-      <div id="map"></div>
-    </div>
 
-    <div id="directions-panel" class="section"></div>
+    <div id="map"></div>
 
-    <div id="gmaps-button-container" style="display: none;">
-      <button onclick="openInGoogleMaps()">Open in Google Maps</button>
-    </div>
-    
+    <h2>Make Schedule</h2>
+    <table id="schedule">
+      <tr>
+        <th id="num_label">#</th>
+        <th id="event_label">Event</th>
+        <th id="time_label">Time</th>
+        <th id="location_label">Location</th>
+        <th id="category_label">Category</th>
+        <th id="notes_label">Notes</th>
+        <th id="priority_label">Priority</th>
+        <th id="visual_label">Visual</th>
+        <th id="eta_label">ETA</th>
+        <th id="gap_label">Gap</th>
+        <th id="actions_label">Actions</th>
+      </tr>
+    </table>
 
+    <h2>Estimated Travel Times</h2>
+    <table id="travel-time-table">
+      <tr>
+        <th>From</th>
+        <th>To</th>
+        <th>Duration</th>
+      </tr>
+    </table>
 
-  
+    <!--makes map-->
+    <div id="map"></div>
+
     <script src="map.js"></script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAHvSzgFSkDHhvB-hjOOUaRME1rBZTIPkk&callback=initMap&libraries=places"></script>
   </body>

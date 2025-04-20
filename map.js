@@ -91,9 +91,9 @@ function updateScheduleTable() {
     row.innerHTML = `
       <td id="num">${idx + 1}</td>
       <td contenteditable="true" oninput="schedule[${idx}].name = this.textContent" id="event">${e.name}</td>
-      <td contenteditable="true" oninput="schedule[${idx}].time = this.textContent" id="time">${e.time} - ${endTime} </td>
+      <td contenteditable="true" oninput="schedule[${idx}].time = this.textContent" id="start_time">${e.time}</td>
+      <td contenteditable="true" oninput="schedule[${idx}].time = this.textContent" id="end_time">${endTime} </td>
       <td contenteditable="true" oninput="schedule[${idx}].location = this.textContent" id="location">${e.location}</td>
-      <td id="category"><input value="${e.category || ''}" onchange="schedule[${idx}].category = this.value"></td>
       <td id="notes"><textarea placeholder="Notes" onchange="schedule[${idx}].note = this.value">${e.note || ''}</textarea></td>
       <td id="priority">
         <select onchange="schedule[${idx}].priority = this.value" style="background:${priorityColor}">
@@ -103,7 +103,6 @@ function updateScheduleTable() {
         </select>
       </td>
       <td id="visual"><div style="width:${e.duration}px; height:10px; background:#007bff"></div></td>
-      <td id="eta"><span id="eta-${idx}">—</span></td>
       <td id="gap"><span id="gap-${idx}" style="color: gray"></span></td>
       <td id="actions">
         <button onclick="schedule.splice(${idx},1); updateScheduleTable()">🗑</button>

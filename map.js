@@ -1,4 +1,3 @@
-// map.js (updated with geolocation, transit route details, and optional markers + schedule enhancements)
 let map;
 let directionsService;
 let directionsRenderer;
@@ -21,6 +20,23 @@ function initMap() {
   }
 
   enableDragReorder();
+  const savedSchedule = sessionStorage.getItem("schedule_data");
+  const savedStops = sessionStorage.getItem("stops_data");
+
+  if (savedSchedule && savedStops) {
+  try {
+    schedule = JSON.parse(savedSchedule);
+    stops = JSON.parse(savedStops);
+    updateScheduleTable();  // re-render table
+  } catch (e) {
+    console.error("Error parsing session data:", e);
+  }
+}
+if (stops.length >= 2) {
+  calculateRoute();  
+}
+
+
   importAISchedule();
 }
 
@@ -69,35 +85,64 @@ function updateScheduleTable() {
     row.setAttribute("draggable", true);
     row.dataset.index = idx;
 
-    const priorityColor = e.priority === "high" ? "#ff4d4d" : e.priority === "medium" ? "#ffc107" : "#5cb85c";
+    const priorityColor = e.priority === "high" ? "#ff4d4d" :
+                          e.priority === "medium" ? "#ffc107" : "#5cb85c";
 
     row.innerHTML = `
       <td>${idx + 1}</td>
-      <td contenteditable="true" oninput="schedule[${idx}].name = this.textContent">${e.name}</td>
-      <td contenteditable="true" oninput="schedule[${idx}].time = this.textContent">${e.time} - ${endTime}</td>
-      <td contenteditable="true" oninput="schedule[${idx}].location = this.textContent">${e.location}</td>
-      <td><input value="${e.category || ''}" onchange="schedule[${idx}].category = this.value"></td>
-      <td><textarea placeholder="Notes" onchange="schedule[${idx}].note = this.value">${e.note || ''}</textarea></td>
+
+      <td contenteditable 
+          oninput="updateScheduleTable()" 
+          onblur="schedule[${idx}].name = this.textContent.trim(); updateScheduleTable();">
+        ${e.name}
+      </td>
+
+      <td contenteditable 
+          oninput="updateScheduleTable()" 
+          onblur="schedule[${idx}].time = this.textContent.trim(); updateScheduleTable();">
+        ${e.time}
+      </td>
+
+      <td>${endTime}</td>
+
+      <td contenteditable 
+          oninput="updateScheduleTable()" 
+          onblur="schedule[${idx}].location = this.textContent.trim(); updateScheduleTable();">
+        ${e.location}
+      </td>
+
+      <td><textarea placeholder="Notes" 
+                    oninput="updateScheduleTable()" 
+                    onblur="schedule[${idx}].note = this.value; updateScheduleTable();">${e.note || ''}</textarea></td>
+
       <td>
-        <select onchange="schedule[${idx}].priority = this.value" style="background:${priorityColor}">
+        <select onchange="schedule[${idx}].priority = this.value; updateScheduleTable();" 
+                style="background:${priorityColor}">
           <option value="low" ${e.priority === "low" ? "selected" : ""}>Low</option>
           <option value="medium" ${e.priority === "medium" ? "selected" : ""}>Medium</option>
           <option value="high" ${e.priority === "high" ? "selected" : ""}>High</option>
         </select>
       </td>
-      <td><div style="width:${e.duration}px; height:10px; background:#007bff"></div></td>
-      <td><span id="eta-${idx}">—</span></td>
-      <td><span id="gap-${idx}" style="color: gray"></span></td>
-      <td>
-        <button onclick="schedule.splice(${idx},1); updateScheduleTable()">🗑</button>
-        <button onclick="schedule.splice(${idx}+1,0,{...schedule[${idx}]}); updateScheduleTable()">📄</button>
-      </td>
+
+      <td><div style="width:${e.duration}px; height:10px; background:#007bff; border-radius:5px"></div></td>
+
+      <td id="gap-${idx}" style="color: gray;"></td>
+
+    <td>
+      <button onclick="schedule.splice(${idx},1); updateScheduleTable()">🗑</button>
+      <button onclick="schedule.splice(${idx}+1,0,{...schedule[${idx}]}); updateScheduleTable()">📄</button>
+      <button onclick="exportToGoogleCalendar(${idx})">📅</button>
+    </td>
+
     `;
   });
+  sessionStorage.setItem("schedule_data", JSON.stringify(schedule));
+  sessionStorage.setItem("stops_data", JSON.stringify(stops));
 
   showGaps();
-  updateETAs();
+  calculateRoute(); 
 }
+
 
 function suggestEndTime(startTime, duration) {
   if (!startTime.includes(":")) return "?";
@@ -187,7 +232,7 @@ function calculateRoute(mode = "DRIVING") {
     origin,
     destination,
     waypoints,
-    optimizeWaypoints: true,
+    optimizeWaypoints: false,
     travelMode: google.maps.TravelMode[mode],
     drivingOptions: mode === "DRIVING" ? {
       departureTime: new Date(),
@@ -198,6 +243,15 @@ function calculateRoute(mode = "DRIVING") {
   directionsService.route(request, (result, status) => {
     if (status === google.maps.DirectionsStatus.OK) {
       directionsRenderer.setDirections(result);
+      document.getElementById("directions-panel").innerHTML =
+   result.routes[0].legs.map((leg, i) => `
+    <h3>Segment ${i + 1}: ${leg.start_address} → ${leg.end_address}</h3>
+    <ol>
+      ${leg.steps.map(step => `<li>${step.instructions} (${step.duration.text})</li>`).join("")}
+    </ol>
+  `).join("<hr>");
+      document.getElementById("gmaps-button-container").style.display = "block";
+      checkScheduleConflicts(result);
       showTravelTimes(result);
       checkEventConflicts(result);
       addInfoWindows(result);
@@ -233,7 +287,7 @@ function showTransitDetails(result) {
 
 function showTravelTimes(result) {
   const table = document.getElementById("travel-time-table");
-  if (!table) return;
+  if (!table || schedule.length < 2) return;
 
   const rows = table.querySelectorAll("tr:not(:first-child)");
   rows.forEach(row => row.remove());
@@ -241,24 +295,34 @@ function showTravelTimes(result) {
   const legs = result.routes[0].legs;
   let totalDuration = 0;
 
-  for (let i = 0; i < legs.length; i++) {
-    const from = legs[i].start_address;
-    const to = legs[i].end_address;
-    const duration = legs[i].duration.text;
-    totalDuration += legs[i].duration.value;
+  for (let i = 0; i < legs.length && i + 1 < schedule.length; i++) {
+    const fromEvent = schedule[i];
+    const toEvent = schedule[i + 1];
+    const leg = legs[i];
+
+    const prevEnd = parseTimeToDate(suggestEndTime(fromEvent.time, fromEvent.duration));
+    const travelSeconds = leg.duration.value;
+    totalDuration += travelSeconds;
+
+    const etaDate = new Date(prevEnd.getTime() + travelSeconds * 1000);
+    const etaFormatted = formatTime(etaDate);
+
+    const scheduledArrival = toEvent.time;
+    const isLate = etaDate > parseTimeToDate(scheduledArrival);
 
     const row = table.insertRow();
     row.innerHTML = `
-      <td>${from}</td>
-      <td>${to}</td>
-      <td>${duration}</td>
+      <td>${fromEvent.name} (${fromEvent.location})</td>
+      <td>${toEvent.name} (${toEvent.location})</td>
+      <td>${leg.duration.text}</td>
+      <td style="color:${isLate ? 'red' : 'black'}">${etaFormatted}${isLate ? " ⚠️ Late" : ""}</td>
     `;
   }
 
   const summary = table.insertRow();
   summary.innerHTML = `
     <td colspan="2"><strong>Total Trip Duration</strong></td>
-    <td><strong>${Math.round(totalDuration / 60)} min</strong></td>
+    <td colspan="2"><strong>${Math.round(totalDuration / 60)} min</strong></td>
   `;
 }
 
@@ -341,15 +405,156 @@ function addInfoWindows(result) {
 }
 
 function updateETAs() {
-  let now = new Date();
-  schedule.forEach((e, i) => {
-    const startTime = new Date(now);
-    const totalTravel = schedule.slice(0, i).reduce((acc, s) => acc + (s.duration || 0), 0);
-    startTime.setMinutes(startTime.getMinutes() + totalTravel);
-    const hr = startTime.getHours() % 12 || 12;
-    const min = startTime.getMinutes().toString().padStart(2, '0');
-    const ampm = startTime.getHours() >= 12 ? 'pm' : 'am';
+  if (schedule.length === 0) return;
+
+  let baseTime = parseTimeToDate(schedule[0].time);
+  if (!baseTime) {
+    console.warn("First event time is invalid or missing.");
+    return;
+  }
+
+  let current = new Date(baseTime); 
+
+  schedule.forEach((event, i) => {
+    if (i > 0) {
+      const prev = schedule[i - 1];
+      current.setMinutes(current.getMinutes() + (prev.duration || 0));
+
+      const travelTime = 10; 
+      current.setMinutes(current.getMinutes() + travelTime);
+    }
+
+    const hr = current.getHours() % 12 || 12;
+    const min = current.getMinutes().toString().padStart(2, '0');
+    const ampm = current.getHours() >= 12 ? 'pm' : 'am';
     const etaCell = document.getElementById(`eta-${i}`);
     if (etaCell) etaCell.textContent = `${hr}:${min}${ampm}`;
   });
 }
+function parseTimeToDate(timeStr) {
+  const match = timeStr?.match(/(\d{1,2}):(\d{2})(am|pm)/i);
+  if (!match) return null;
+  let [_, h, m, period] = match;
+  h = parseInt(h);
+  m = parseInt(m);
+  if (period.toLowerCase() === "pm" && h !== 12) h += 12;
+  if (period.toLowerCase() === "am" && h === 12) h = 0;
+  const now = new Date();
+  now.setHours(h);
+  now.setMinutes(m);
+  now.setSeconds(0);
+  now.setMilliseconds(0);
+  return now;
+}
+
+function formatTime(date) {
+  const hr = date.getHours() % 12 || 12;
+  const min = date.getMinutes().toString().padStart(2, '0');
+  const ampm = date.getHours() >= 12 ? 'pm' : 'am';
+  return `${hr}:${min}${ampm}`;
+}
+
+function checkScheduleConflicts(result) {
+  if (!result?.routes?.[0]?.legs || schedule.length < 2) return;
+
+  const legs = result.routes[0].legs;
+
+  for (let i = 1; i < schedule.length; i++) {
+    const leg = legs[i - 1];
+    const toEvent = schedule[i];
+    const fromEvent = schedule[i - 1];
+
+    const toTime = parseTimeToDate(toEvent.time);
+    const leaveBy = new Date(toTime.getTime() - leg.duration.value * 1000);
+    const fromEnd = parseTimeToDate(suggestEndTime(fromEvent.time, fromEvent.duration));
+
+    const gapCell = document.getElementById(`gap-${i}`);
+    if (!gapCell) continue;
+
+    if (leaveBy < fromEnd) {
+      gapCell.innerHTML = `⚠️ Not enough travel time`;
+      gapCell.style.color = "red";
+    } else {
+      const minsGap = Math.round((leaveBy - fromEnd) / 60000);
+      gapCell.innerHTML = `+${minsGap} min gap`;
+      gapCell.style.color = "gray";
+    }
+  }
+}
+
+function autoFixConflicts() {
+  if (schedule.length < 2) return;
+
+  calculateRoute(); 
+  setTimeout(() => {
+    const travelRows = document.querySelectorAll("#travel-time-table tr:not(:first-child):not(:last-child)");
+    if (travelRows.length !== schedule.length - 1) return;
+
+    for (let i = 0; i < travelRows.length; i++) {
+      const row = travelRows[i];
+      const arriveByText = row.children[3].textContent.replace(/⚠️ Late/, "").trim();
+      const toEvent = schedule[i + 1];
+
+      if (arriveByText !== "" && toEvent.time !== arriveByText) {
+        toEvent.time = arriveByText;
+      }
+    }
+
+    updateScheduleTable();
+  }, 1000); 
+}
+
+function handleAddEvent() {
+  const name = document.getElementById("event-name").value.trim();
+  const time = document.getElementById("event-time").value.trim();
+  const location = document.getElementById("address-input").value.trim();
+  const duration = parseInt(document.getElementById("event-duration").value) || 60;
+
+  if (!name || !time || !location) {
+    alert("Please fill out event name, time, and location.");
+    return;
+  }
+
+  addEventToSchedule(name, time, location, duration);
+  stops.push(location);
+
+  document.getElementById("event-name").value = "";
+  document.getElementById("event-time").value = "";
+  document.getElementById("event-duration").value = "";
+  document.getElementById("address-input").value = "";
+}
+
+function exportToGoogleCalendar(index) {
+  const event = schedule[index];
+  if (!event || !event.time) {
+    alert("Missing or invalid event time.");
+    return;
+  }
+
+  const start = parseTimeToDate(event.time);
+  const end = parseTimeToDate(suggestEndTime(event.time, event.duration));
+
+  if (!start || !end) {
+    alert("Unable to parse start or end time.");
+    return;
+  }
+  const formatLocal = date => {
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    const hh = String(date.getHours()).padStart(2, '0');
+    const min = String(date.getMinutes()).padStart(2, '0');
+    const ss = "00"; 
+    return `${yyyy}${mm}${dd}T${hh}${min}${ss}`;
+  };
+
+  const gcalUrl = `https://www.google.com/calendar/render?action=TEMPLATE` +
+    `&text=${encodeURIComponent(event.name)}` +
+    `&dates=${formatLocal(start)}/${formatLocal(end)}` +
+    `&details=${encodeURIComponent(event.note || '')}` +
+    `&location=${encodeURIComponent(event.location || '')}` +
+    `&sf=true&output=xml`;
+
+  window.open(gcalUrl, "_blank");
+}
+

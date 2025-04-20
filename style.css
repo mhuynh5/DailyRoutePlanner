@@ -1,0 +1,47 @@
+  body {
+    font-family: 'Lucida Sans';
+    background-color: #85eaa3;
+    margin: 10px;
+    padding: 0;
+  }
+  form {
+    padding: 10px;
+    background: #f0f0f0;
+  }
+  input {
+    margin: 5px 0;
+    padding: 5px;
+    width: 300px;
+  }
+  button {
+    padding: 8px 16px;
+  }
+
+  table {
+    margin-right: auto;
+    margin-left: auto;
+    width: 70%;
+  }
+  th, tr{
+    border: 1px solid #85eaa3;
+    background-color:#75db9e;
+  }
+  #schedule_button {
+    align-items: center;
+  }
+  #map {
+    height: 80vh;
+    width: 100%;
+  }
+
+  form {
+    background-color: #85eaa3;
+  }
+  input[type="radio"] {
+    width: 1%;
+  }
+
+  input {
+    width: 80%;
+  }
+  

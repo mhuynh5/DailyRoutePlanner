@@ -1,4 +1,4 @@
-body {
+  body {
     font-family: 'Lucida Sans';
     background-color: #85eaa3;
     margin: 10px;
@@ -26,8 +26,15 @@ body {
     border: 1px solid #85eaa3;
     background-color:#75db9e;
   }
+  #schedule_button {
+    
+  }
   #map {
     height: 80vh;
     width: 100%;
+  }
+
+  input {
+    width: 80%;
   }
   

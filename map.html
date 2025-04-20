@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" href="map.css">
+    <link rel="stylesheet" href="style.css">
     <title>Daily Route Planner</title>
     <style>
       #map {
@@ -25,11 +25,12 @@
       <button onclick="calculateRoute()">Map Route</button>
       <ul id="stop-list"></ul>
     </div>
+
+    <!--makes map-->
     <div id="map"></div>
 
-    <!--make schedule-->
+    <!--make schedule table-->
     <h1>Make Schedule</h1>
-    
     <table id="schedule">
       <tr>
         <tr>
@@ -39,12 +40,9 @@
         </tr>
       </tr>
     </table>
-    <a href="schedule.html" id="button">Create Event
-    </a>
+    <button id="schedule_button" onclick="location.href='schedule.html'">Schedule Event</button>
 
-    <!--make map-->
-    <h1>My Google Map</h1>
-    <div id="map"></div>
+    <!--TODO: within script make location array and get inputs of coords-->
     <script>
       function initMap() {
         const location = { lat: 37.7749, lng: -122.4194 }; // Example: San Francisco

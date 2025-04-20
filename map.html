@@ -3,7 +3,6 @@
   <head>
     <link rel="stylesheet" href="style.css">
     <title>Daily Route Planner</title>
-    <link rel="stylesheet" href="style.css">
     <style>
       #map {
         height: 80vh;
@@ -11,10 +10,6 @@
       }
       #controls {
         padding: 10px;
-      }
-      table, th, td {
-        border: 1px solid #ccc;
-        padding: 5px;
       }
       textarea {
         width: 100%;
@@ -50,17 +45,17 @@
     <h2>Make Schedule</h2>
     <table id="schedule">
       <tr>
-        <th>#</th>
-        <th>Event</th>
-        <th>Time</th>
-        <th>Location</th>
-        <th>Category</th>
-        <th>Notes</th>
-        <th>Priority</th>
-        <th>Visual</th>
-        <th>ETA</th>
-        <th>Gap</th>
-        <th>Actions</th>
+        <th id="num_label">#</th>
+        <th id="event_label">Event</th>
+        <th id="time_label">Time</th>
+        <th id="location_label">Location</th>
+        <th id="category_label">Category</th>
+        <th id="notes_label">Notes</th>
+        <th id="priority_label">Priority</th>
+        <th id="visual_label">Visual</th>
+        <th id="eta_label">ETA</th>
+        <th id="gap_label">Gap</th>
+        <th id="actions_label">Actions</th>
       </tr>
     </table>
 
@@ -75,34 +70,6 @@
 
     <!--makes map-->
     <div id="map"></div>
-
-    <!--make schedule table-->
-    <h1>Make Schedule</h1>
-    <table id="schedule">
-      <tr>
-        <tr>
-          <th style="width:20%">Event Number</th>
-          <th>Event</th>
-          <th>Time</th>
-        </tr>
-      </tr>
-    </table>
-    <button id="schedule_button" onclick="location.href='schedule.html'">Schedule Event</button>
-
-    <!--TODO: within script make location array and get inputs of coords-->
-    <script>
-      function initMap() {
-        const location = { lat: 37.7749, lng: -122.4194 }; // Example: San Francisco
-        const map = new google.maps.Map(document.getElementById("map"), {
-          zoom: 12,
-          center: location,
-        });
-        const marker = new google.maps.Marker({
-          position: location,
-          map: map,
-        });
-      }
-    </script>
 
     <script src="map.js"></script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAHvSzgFSkDHhvB-hjOOUaRME1rBZTIPkk&callback=initMap&libraries=places"></script>

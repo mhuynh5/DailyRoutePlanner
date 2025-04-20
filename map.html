@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>Daily Route Planner</title>
+    <link rel="stylesheet" href="style.css">
     <style>
       #map {
         height: 80vh;
@@ -10,28 +11,91 @@
       #controls {
         padding: 10px;
       }
-      #stop-list {
-        list-style: none;
-        padding-left: 0;
+      table, th, td {
+        border: 1px solid #ccc;
+        padding: 5px;
+      }
+      textarea {
+        width: 100%;
+        resize: vertical;
       }
     </style>
   </head>
   <body>
     <h1>Daily Route Planner</h1>
+
     <div id="controls">
-      <input type="text" id="address-input" placeholder="Enter a location" />
-      <button onclick="addStop()">Add Stop</button>
+      <input type="text" id="address-input" placeholder="Enter location" />
+      <input type="text" id="event-name" placeholder="Event name" />
+      <input type="text" id="event-time" placeholder="Start time (e.g. 10:00am)" />
+      <input type="number" id="event-duration" placeholder="Duration (min)" min="1" />
+      <button onclick="handleAddEvent()">Add Event</button>
       <button onclick="calculateRoute()">Map Route</button>
-      <ul id="stop-list"></ul>
+      <button onclick="clearSchedule()">Clear Schedule</button>
+      <button onclick="useGeolocation()">Use My Location as Start</button>
+      <button onclick="window.print()">Print Schedule</button>
+      <br /><br />
+      <label for="travel-mode">Travel Mode:</label>
+      <select id="travel-mode" onchange="calculateRouteWithMode()">
+        <option value="DRIVING">Driving</option>
+        <option value="WALKING">Walking</option>
+        <option value="BICYCLING">Bicycling</option>
+        <option value="TRANSIT">Transit</option>
+      </select>
     </div>
+
     <div id="map"></div>
 
-    <!-- Your JS -->
-    <script src="map.js"></script>
+    <h2>Make Schedule</h2>
+    <table id="schedule">
+      <tr>
+        <th>#</th>
+        <th>Event</th>
+        <th>Time</th>
+        <th>Location</th>
+        <th>Category</th>
+        <th>Notes</th>
+        <th>Priority</th>
+        <th>Visual</th>
+        <th>ETA</th>
+        <th>Gap</th>
+        <th>Actions</th>
+      </tr>
+    </table>
 
-    <!-- FIXED: Google Maps API (must be all on one line!) -->
-    <script async defer
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAHvSzgFSkDHhvB-hjOOUaRME1rBZTIPkk&callback=initMap">
+    <h2>Estimated Travel Times</h2>
+    <table id="travel-time-table">
+      <tr>
+        <th>From</th>
+        <th>To</th>
+        <th>Duration</th>
+      </tr>
+    </table>
+
+    <script src="map.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAHvSzgFSkDHhvB-hjOOUaRME1rBZTIPkk&callback=initMap&libraries=places"></script>
+    <script>
+      function calculateRouteWithMode() {
+        const mode = document.getElementById("travel-mode").value;
+        calculateRoute(mode);
+      }
+
+      function handleAddEvent() {
+        const name = document.getElementById("event-name").value.trim();
+        const time = document.getElementById("event-time").value.trim();
+        const location = document.getElementById("address-input").value.trim();
+        const duration = parseInt(document.getElementById("event-duration").value) || 60;
+        if (!name || !time || !location) {
+          alert("Please fill out event name, time, and location.");
+          return;
+        }
+        addEventToSchedule(name, time, location, duration);
+        stops.push(location);
+        document.getElementById("event-name").value = "";
+        document.getElementById("event-time").value = "";
+        document.getElementById("event-duration").value = "";
+        document.getElementById("address-input").value = "";
+      }
     </script>
   </body>
 </html>

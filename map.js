@@ -547,3 +547,22 @@ function exportToGoogleCalendar(index) {
   window.open(gcalUrl, "_blank");
 }
 
+function openInGoogleMaps() {
+  if (stops.length < 2) {
+    alert("Please add at least two stops to map a route.");
+    return;
+  }
+
+  const baseUrl = "https://www.google.com/maps/dir/?api=1";
+  const origin = encodeURIComponent(stops[0]);
+  const destination = encodeURIComponent(stops[stops.length - 1]);
+  const waypoints = stops.slice(1, -1).map(encodeURIComponent).join("|");
+
+  const url = `${baseUrl}&origin=${origin}&destination=${destination}` +
+              (waypoints ? `&waypoints=${waypoints}` : "") +
+              `&travelmode=${document.getElementById("travel-mode").value.toLowerCase()}`;
+
+  window.open(url, "_blank");
+}
+
+

@@ -27,7 +27,7 @@
     background-color:#75db9e;
   }
   #schedule_button {
-    
+    align-items: center;
   }
   #map {
     height: 80vh;

@@ -5,15 +5,43 @@
         <title>Make Schedule</title>
     </head>
     <body> 
-        <input type="text" placeholder="Enter a location">
-        <br>
-        <input type="text" placeholder="Enter what you are doing there (optional)">
-        <br>
-        <input type="text" placeholder="Enter estimate on how long you will be there">
-        <br>
-        <input type="text" placeholder="Enter what time you want to get there">
-        <br>
+        <label>Where do you plan to go?</label>
+        <input type="text" placeholder="Enter a location" id="location">
+        <br><br>
+
+        <label>Approximately how long will you be there?</label>
+        <select placeholder="Time of stay" id="time_of_stay">
+            <option>1 min</option>
+            <option>5 min</option>
+            <option>10 min</option>
+            <option>20 min</option>
+            <option>30 min</option>
+            <option>1 hr</option>
+            <option>2 hr</option>
+            <option>3 hr</option>
+            <option>5 hr</option>
+            <option>10 hr</option>
+            <option>10 hr+</option>
+        </select>
+        <br><br>
+
+        <label>What are you planning to do here? (optional)</label>
+        <input type="text" placeholder="Enter activity" id="activity">
+        <br><br>
+        
         <!--Use if we implement AI-->
-        <button onclick="location.href='map.html'">AI Generate Schedule</button>
+        <form id="choose_ai">
+            <input type="radio">
+            <label>AI Generate Schedule</label>
+            <input type="radio">
+            <label>Input Your Own Time</label>
+        </form>
+        <br><br>
+
+        <label>What time do you want to get there?</label>
+        <input type="text" placeholder="Enter time of arrival" id="time_of_arrival">
+        <br><br>
+
+        <button id="generate_schedule">Generate Schedule</button>
     </body>
 </html>

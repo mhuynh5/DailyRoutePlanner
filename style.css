@@ -15,33 +15,60 @@
   }
   button {
     padding: 8px 16px;
+    font-family: 'Lucida Sans';
   }
 
   table {
     margin-right: auto;
     margin-left: auto;
-    width: 70%;
+    width:100%;
   }
   th, tr{
-    border: 1px solid #85eaa3;
+    border: 1px solid black;
+    width: 1%;
+    text-align: center;
+  }
+  th {
     background-color:#75db9e;
   }
-  #schedule_button {
-    align-items: center;
-  }
-  #map {
-    height: 80vh;
-    width: 100%;
-  }
-
-  form {
-    background-color: #85eaa3;
-  }
-  input[type="radio"] {
+  #num, #num_label {
     width: 1%;
   }
-
-  input {
-    width: 80%;
+  #event, #event_label {
+    width: 10%;
   }
-  
+  #time, #time_label {
+    width: 3%;
+  }
+  #location, #location_label {
+    width: 10%;
+  }
+  #category, #category_label {
+    width: 1%;
+  }
+  #notes, #notes_label {
+    width: 7%;
+  }
+  #priority, #priority_label {
+    width: 3%;
+  }
+  #visual, #visual_label {
+    width: 5%;
+  }
+  #eta, #eta_label {
+    width: 5%;
+  }
+  #gap, #gap_label {
+    width: 5%;
+  }
+  #actions, #actions_label {
+    width: 3%;
+  }
+
+  textarea {
+    width: 90%;
+    font-family: 'Lucida Sans';
+  }
+  select {
+    font-family: 'Lucida Sans';
+  }
